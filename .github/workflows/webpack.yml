@@ -34,7 +34,6 @@ jobs:
     - name: Build Electron
       env:
         ELECTRON: true
-        CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         APP_VERSION_NUMBER: 1.0.0
       run: npm run electron:buildUnix
 
