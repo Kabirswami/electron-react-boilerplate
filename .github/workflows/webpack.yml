@@ -29,4 +29,4 @@ jobs:
       env:
           ELECTRON: true
           APP_VERSION_NUMBER: 1.0.0
-          run: npm build
+      run: npm build
