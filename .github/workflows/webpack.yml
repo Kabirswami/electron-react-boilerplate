@@ -31,11 +31,6 @@ jobs:
           APP_VERSION_NUMBER: 1.0.0
       run: npm run build
       
-    - name: Build Electron
-      env:
-        ELECTRON: true
-        APP_VERSION_NUMBER: 1.0.0
-      run: npm run electron:buildUnix
+    - name: Install electron-builder
+      run: npm install -g electron-builder
 
-    - name: See directory in electron_dist
-      run: ls ./electron_dist
