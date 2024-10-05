@@ -22,6 +22,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      run: |
-        npm install
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build on macOS
+      env:
+          ELECTRON: true
+          APP_VERSION_NUMBER: 1.0.0
+          run: npm build
