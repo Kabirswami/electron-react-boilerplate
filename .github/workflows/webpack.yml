@@ -34,3 +34,32 @@ jobs:
     - name: Install electron-builder
       run: npm install -g electron-builder
 
+    - name: Notarize the app
+      env:
+        APPLE_ID: ${{ secrets.APPLE_ID }} \ # APPLE ID NEEDS TO BE ADDED
+        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}  \ # APPLE ID PASSWORD NEEDS TO BE ADDED
+      run: |
+        electron-builder --mac --x64 --publish never
+
+    - name: Wait for Notarization
+      env:
+        APPLE_ID: ${{ secrets.APPLE_ID }}  \ # APPLE ID NEEDS TO BE ADDED
+        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}  \ # APPLE ID PASSWORD NEEDS TO BE ADDED
+        APP_PATH: "path/to/app.app"  \ # NEEDS TO ADD APP EXPORT PATH
+      run: |
+        notarytool store-credentials --apple-id $APPLE_ID --password $APPLE_ID_PASSWORD
+        notarytool submit "$APP_PATH" --keychain-profile "notarytool" --wait
+        
+    - name: Create DMG installer
+      run: |
+        create-dmg \
+          --volname "MyApp Installer"
+          --app-drop-link 260 210
+          "path/to/app.app"   \ # NEEDS TO ADD APP EXPORT PATH USED ABOVE
+          "output-directory"  \ # NEEDS TO ADD OUTPUT DIRECTORY FOR DMG
+
+    - name: Upload DMG as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: MyApp.dmg
+        path: output-directory/*.dmg
